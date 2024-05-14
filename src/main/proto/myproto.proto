@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package my_service;
+
+service MyServiceController {
+  rpc SayHello(Request) returns (Response) {}
+  rpc ProcessMessaging(stream Request) returns (stream Response) {}
+}
+
+message Request {
+    string message = 1;
+    optional int32 number_of_times = 2;
+}
+
+message Response {
+    bool status = 1;
+}
