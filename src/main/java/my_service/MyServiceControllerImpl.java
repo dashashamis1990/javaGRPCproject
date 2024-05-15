@@ -12,11 +12,11 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
 
     @Override
     public void sayHello(Request request, StreamObserver<Response> responseObserver) {
-        System.out.println("got message");
+        System.out.println("Received single message");
         String message = request.getMessage();
         int count = request.getNumberOfTimes();
         for (int i = 0; i < count; i++) {
-            System.out.println(message);
+            System.out.println(message + " - " + (i + 1));
         }
         Response response = Response.newBuilder().setStatus(true).build();
         responseObserver.onNext(response);
@@ -36,10 +36,12 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
                 }
 
                 try {
-                    Thread.sleep(60);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                now = LocalDateTime.now().format(dtf);
+                System.out.println(now + " Sending response");
                 Response response = Response.newBuilder().setStatus(true).build();
                 responseObserver.onNext(response);
             }
