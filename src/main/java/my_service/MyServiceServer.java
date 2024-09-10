@@ -17,12 +17,12 @@ public class MyServiceServer {
         System.out.println("Server started, listening on " + port);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.err.println("*** shutting down gRPC server since JVM is shutting down");
-            MyServiceServer.this.stop();
+            stop();
             System.err.println("*** server shut down");
         }));
     }
 
-    private void stop() {
+    public void stop() {
         if (server != null) {
             server.shutdown();
         }
