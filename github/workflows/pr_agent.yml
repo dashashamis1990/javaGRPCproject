@@ -18,3 +18,5 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          DEFAULT_PROMPT: "Add function for getting hash from any test"
+
