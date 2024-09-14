@@ -6,17 +6,21 @@ import my_service.Myproto.Response;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 
 public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceControllerImplBase {
 
+    private static final Logger logger = Logger.getLogger(MyServiceControllerImpl.class.getName());
+
     @Override
     public void sayHello(Request request, StreamObserver<Response> responseObserver) {
-        System.out.println("Received single message");
+        logger.log(Level.INFO, "Received single message");
         String message = request.getMessage();
         int count = request.getNumberOfTimes();
         for (int i = 0; i < count; i++) {
-            System.out.println(message + " - " + (i + 1));
+            logger.log(Level.INFO, "{0} - {1}", new Object[]{message, (i + 1)});
         }
         Response response = Response.newBuilder().setStatus(true).build();
         responseObserver.onNext(response);
@@ -30,9 +34,9 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
             public void onNext(Request request) {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
                 String now = LocalDateTime.now().format(dtf);
-                System.out.println(now + " Received message: " + request.getMessage());
+                logger.log(Level.INFO, "{0} Received message: {1}", new Object[]{now, request.getMessage()});
                 for (int i = 0; i < request.getNumberOfTimes(); i++) {
-                    System.out.println("Processing " + request.getMessage() + " time " + (i + 1));
+                    logger.log(Level.INFO, "Processing {0} time {1}", new Object[]{request.getMessage(), (i + 1)});
                 }
 
                 try {
@@ -41,7 +45,7 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
                     throw new RuntimeException(e);
                 }
                 now = LocalDateTime.now().format(dtf);
-                System.out.println(now + " Sending response");
+                logger.log(Level.INFO, "{0} Sending response", now);
                 Response response = Response.newBuilder().setStatus(true).build();
                 responseObserver.onNext(response);
             }
@@ -59,3 +63,4 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
     }
 
 }
+
