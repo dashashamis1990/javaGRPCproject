@@ -24,6 +24,29 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
     }
 
     @Override
+    public void sendEmail(SendEmailRequest request, StreamObserver<SendEmailResponse> responseObserver) {
+        System.out.println("Received SendEmail request");
+        String recipient = request.getRecipient();
+        String subject = request.getSubject();
+        String body = request.getBody();
+
+        // Simulate sending email logic
+        boolean emailSent = sendEmailToRecipient(recipient, subject, body);
+
+        SendEmailResponse response = SendEmailResponse.newBuilder().setStatus(emailSent).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    private boolean sendEmailToRecipient(String recipient, String subject, String body) {
+        // Placeholder for actual email sending logic
+        System.out.println("Sending email to: " + recipient);
+        System.out.println("Subject: " + subject);
+        System.out.println("Body: " + body);
+        return true; // Simulate successful email sending
+    }
+
+    @Override
     public StreamObserver<Request> processMessaging(StreamObserver<Response> responseObserver) {
         return new StreamObserver<Request>() {
             @Override
@@ -59,3 +82,4 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
     }
 
 }
+
