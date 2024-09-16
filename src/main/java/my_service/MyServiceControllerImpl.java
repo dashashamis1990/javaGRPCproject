@@ -7,7 +7,6 @@ import my_service.Myproto.Response;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 
 
 public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceControllerImplBase {
@@ -31,7 +30,7 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
         return new StreamObserver<Request>() {
             @Override
             public void onNext(Request request) {
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String now = LocalDateTime.now().format(dtf);
                 logger.info(now + " Received message: " + request.getMessage());
                 for (int i = 0; i < request.getNumberOfTimes(); i++) {
@@ -39,7 +38,7 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
                 }
 
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -51,7 +50,7 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
 
             @Override
             public void onError(Throwable t) {
-                t.printStackTrace();
+                logger.severe("Error occurred: " + t.getMessage());
             }
 
             @Override
