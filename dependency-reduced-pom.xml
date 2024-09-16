@@ -59,9 +59,17 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <version>1.6.2</version>
+    </dependency>
+  </dependencies>
   <properties>
     <protobuf.version>3.19.1</protobuf.version>
     <protoc.plugin.version>1.44.0</protoc.plugin.version>
     <grpc.version>1.44.0</grpc.version>
   </properties>
 </project>
+
