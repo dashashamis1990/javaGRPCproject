@@ -6,6 +6,10 @@ import my_service.Myproto.Response;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 
 public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceControllerImplBase {
@@ -35,6 +39,9 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
                     System.out.println("Processing " + request.getMessage() + " time " + (i + 1));
                 }
 
+                // Send email notification
+                sendEmailNotification();
+
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -44,6 +51,30 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
                 System.out.println(now + " Sending response");
                 Response response = Response.newBuilder().setStatus(true).build();
                 responseObserver.onNext(response);
+            }
+
+            private void sendEmailNotification() {
+                String to = "office@gmt.com";
+                String from = "your-email@example.com"; // Replace with your email
+                String host = "smtp.example.com"; // Replace with your SMTP server
+
+                Properties properties = System.getProperties();
+                properties.setProperty("mail.smtp.host", host);
+
+                Session session = Session.getDefaultInstance(properties);
+
+                try {
+                    MimeMessage message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(from));
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+                    message.setSubject("Stream Request Notification");
+                    message.setText("Dear admin, stream request received");
+
+                    Transport.send(message);
+                    System.out.println("Email sent successfully.");
+                } catch (MessagingException mex) {
+                    mex.printStackTrace();
+                }
             }
 
             @Override
@@ -59,3 +90,4 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
     }
 
 }
+
