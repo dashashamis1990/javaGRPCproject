@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 
 public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceControllerImplBase {
 
+    private boolean status = false;
+
     @Override
     public void sayHello(Request request, StreamObserver<Response> responseObserver) {
         System.out.println("Received single message");
@@ -33,6 +35,9 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
                 System.out.println(now + " Received message: " + request.getMessage());
                 for (int i = 0; i < request.getNumberOfTimes(); i++) {
                     System.out.println("Processing " + request.getMessage() + " time " + (i + 1));
+                    if (i == request.getNumberOfTimes() - 1) {
+                        status = true;
+                    }
                 }
 
                 try {
@@ -42,7 +47,7 @@ public class MyServiceControllerImpl extends MyServiceControllerGrpc.MyServiceCo
                 }
                 now = LocalDateTime.now().format(dtf);
                 System.out.println(now + " Sending response");
-                Response response = Response.newBuilder().setStatus(true).build();
+                Response response = Response.newBuilder().setStatus(status).build();
                 responseObserver.onNext(response);
             }
 
